@@ -1,25 +1,24 @@
 from gevent import monkey, socket
 
 monkey.patch_all()
-from gevent import spawn,sleep
+from gevent import spawn, sleep
 import time
 
 sockets = []
 
 
-def process_request(client, info):
-    ip, port = info
+def process_request(client, addr):
     while True:
         data = client.recv(1024)
         if data:
-            print("%s:%d %s - %s " % (ip, port, time.ctime(), data.decode()))
-            if data.decode()=="456":
+            print("[%s:%d] [recv] %s - %s " % (addr[0], addr[1], time.ctime()[-13:-5], data.decode()))
+            if data.decode() == "A456":
                 sleep(5)
             client.send(data)
         else:
             client.close()
             sockets.remove(client)
-            print("%s:%d was disconnected" % info)
+            print("%s:%d was disconnected" % addr)
             break
 
 
