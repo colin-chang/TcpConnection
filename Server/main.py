@@ -1,9 +1,8 @@
 from gevent import monkey, socket
-
-monkey.patch_all()
 from gevent import spawn, sleep
 import time
 
+monkey.patch_all()
 sockets = []
 
 
@@ -13,7 +12,7 @@ def process_request(client, addr):
         if data:
             print("[%s:%d] [recv] %s - %s " % (addr[0], addr[1], time.ctime()[-13:-5], data.decode()))
             if data.decode() == "A456":
-                sleep(5)
+                sleep(3)  # 模拟耗时任务
             client.send(data)
         else:
             client.close()
@@ -24,7 +23,7 @@ def process_request(client, addr):
 
 def main():
     tcp = socket.socket()
-    tcp.bind(('', 8088))
+    tcp.bind(('', 8086))
     tcp.listen()
     tcp.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sockets.append(tcp)

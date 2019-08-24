@@ -10,11 +10,12 @@ namespace TcpClient
     {
         static void Main(string[] args)
         {
+            var addr = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8086);
             var connA = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            connA.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8088));
+            connA.Connect(addr);
 
             var connB = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            connB.Connect(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8088));
+            connB.Connect(addr);
 
             TestServer(connA, "A123");
             Thread.Sleep(1000);
@@ -35,7 +36,7 @@ namespace TcpClient
                 var length = conn.Receive(byteData);
                 if (length > 0)
                     Console.WriteLine($"[recv] : {DateTime.Now.ToString("HH:mm:ss")} - {Encoding.UTF8.GetString(byteData)}");
-            }).Start();
+            }){IsBackground = true}.Start();
         }
     }
 }
